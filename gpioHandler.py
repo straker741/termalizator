@@ -31,41 +31,52 @@ def getWorkingDirectory():
     data = p.communicate()[0].strip()
     return data
 
+def getTargetTemp():
+    config = getConfig(wd + "/config.json")
+    config = json.loads(config)
+    return config["targetTemp"]
 
 class ThermoReader:
-    def __init__(self):
+    def __init__(self, wd):
         try:
-            wd = getWorkingDirectory()
+            print("working Directory:", wd)
             config = getConfig(wd + "/config.json")
+            print("config:", config)
             config = json.loads(config)
             self.inputPin = config["inputPin"]
             self.outputPin = config["outputPin"]
             self.targetTemp = config["targetTemp"]
+            
             self.setup()
         except:
             print("Cannot read config.json!")
             print("Exitting!")
             exit()
 
-    def setup():
+    def setup(self):
+        print("SETUP")
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(outputPin, GPIO.OUT)
-        GPIO.setup(inputPin, GPIO.IN)
+        print("Setting mode")
+        GPIO.setup(self.outputPin, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(self.inputPin, GPIO.IN)
+        print("Setting GPIOs")
+        print("Getting IDs:", end=" ")
         self.getIDs()
 
-    def getIDs():
+    def getIDs(self):
         p = subprocess.Popen("ls " + BASE_DIR, stdout=subprocess.PIPE, universal_newlines=True, shell=True)
-        data = p.communicate()[0]
+        data = p.communicate()[0].split()
         self.IDs = [ x for x in data if x[0:2] == "28" ]
+        print(self.IDs)
         return self.IDs
 
-    def read_temp_raw(path):
+    def read_temp_raw(self, path):
         f = open(path, 'r')
         lines = f.readlines()
         f.close()
         return lines
     
-    def read_temp(path):
+    def read_temp(self, path):
         lines = self.read_temp_raw(path)
         while lines[0].strip()[-3:] != 'YES':
             time.sleep(0.2)
@@ -76,7 +87,7 @@ class ThermoReader:
             temp_c = float(temp_string) / 1000.0       
             return temp_c
 
-    def getTempsWithIDs():
+    def getTempsWithIDs(self):
         data = []
         for ID in self.IDs:
             path = BASE_DIR + ID + '/w1_slave'
@@ -85,41 +96,47 @@ class ThermoReader:
         self.data = data
         return data
 
-    def getAVG():
+    def getAVG(self):
         values = [ x[1] for x in self.data ]
         avg = sum(values) / len(values)
         return avg
 
-    def setOutON():
+    def setOutON(self):
         GPIO.output(self.outputPin, GPIO.HIGH)
-        print("Setting outputPin HIGH")
+        print("Setting outputPin HIGH", end=" ")
+        print(GPIO.gpio_function(self.outputPin))
 
-    def setOutOFF():
+    def setOutOFF(self):
         GPIO.output(self.outputPin, GPIO.LOW)
-        print("Setting outputPin LOW")
+        print("Setting outputPin LOW:", end=" ")
+        print(GPIO.gpio_function(self.outputPin))
 
 if __name__ == "__main__":
     try:
-        TR = ThermoReader()
+        wd = getWorkingDirectory()
+        TR = ThermoReader(wd)
         TR.setup()
 
         while True:
             data = TR.getTempsWithIDs()
             temp = TR.getAVG()
-            if temp < TR.targetTemp:
+            targetTemp = getTargetTemp()
+            if temp < targetTemp:
                 TR.setOutON()
             else:
                 TR.setOutOFF()
 
-            print(data)
-            print(json.dump(data))
+            
+            print("json dumps:", json.dumps(data))
             data = {
                 "data": data,
-                "datetime": datetime.now()
+                "datetime": datetime.now().strftime("%Y-%m-%d %H-%M-%S")
             }
-            setConfig(wd + "/data.json", json.dump(data))
+            print("data:", data)
+            setConfig(wd + "/data.json", json.dumps(data))
 
             sleep(1)
     except KeyboardInterrupt:
         print("End of temperature readings!")
+        GPIO.cleanup()
 
