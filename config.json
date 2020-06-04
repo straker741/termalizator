@@ -1,5 +1,4 @@
 {
-    "inputPin": 18,
     "outputPin": 16,
     "targetTemp": 25
 }
