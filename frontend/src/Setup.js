@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import axios from 'axios';
 
 
-const validationSchema = Yup.object().shape({
-    targetTemp: Yup.number("Enter a number!")
+const validationSchema = yup.object().shape({
+    targetTemp: yup.number("Enter a number!")
         .positive("Enter positive number!")
         .required("This field is required!"),
-    outputPin: Yup.number("Enter a number!")
+    outputPin: yup.number("Enter a number!")
         .positive("Enter positive number!")
         .required("This field is required!"),
 });
