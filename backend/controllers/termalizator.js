@@ -46,7 +46,7 @@ const getConfig = (req, res) => {
 
 
 // @desc    Updates configuration
-// @route   PUT /config
+// @route   PUT:/config
 const putConfig = async (req, res) => {
     try {
         const isValid = await ConfigSchema.isValid(req.body);
@@ -83,6 +83,8 @@ const putConfig = async (req, res) => {
 };
 
 
+// @desc    Stops measurement of temperature
+// @route   GET:/stop
 const stop = (req, res) => {
     try {
         killProcess(SCRIPT_NAME)
