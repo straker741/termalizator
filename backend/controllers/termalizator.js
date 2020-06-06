@@ -55,8 +55,10 @@ const putConfig = async (req, res) => {
             
             updateJsonData(BASE_PATH + "config.json", req.body);
             const processes = await isRunning(SCRIPT_NAME);
+            console.log(processes);
             if (processes.length === 0) {
                 // Start process
+                console.log(`Starting process ${SCRIPT_NAME}`);
                 startProcess(SCRIPT_NAME);
             }
             // Otherwise do nothing
@@ -89,9 +91,9 @@ const stop = (req, res) => {
     try {
         killProcess(SCRIPT_NAME)
 
-        console.log("Status:  ", 200);
-        res.status(200);
-        res.json(config);
+        console.log("Status:  ", 204);
+        res.status(204);
+        res.send("");
     }
     catch (err) {
         console.log("Status:  ", 500);

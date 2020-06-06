@@ -3,21 +3,24 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import Help from './Help';
 
 
 const validationSchema = yup.object().shape({
-    targetTemp: yup.number("Enter a number!")
+    targetTemp: yup.number("Enter a valid number!")
         .positive("Enter positive number!")
         .required("This field is required!"),
-    outputPin: yup.number("Enter a number!")
+    outputPin: yup.number("Enter a valid number!")
         .positive("Enter positive number!")
         .required("This field is required!"),
 });
 
+const outputPinHelpText = "Pin 16 is recommended!";
+
 const onSubmit = (data) => {
     console.log(data);
 
-    axios.put("http://192.168.178.114:5000/config/", data).then((response) => {
+    axios.put("http://localhost:5000/config/", data).then((response) => {
         console.log(response);
     }).catch(function (error) {
         if (error.response) {
@@ -36,7 +39,7 @@ const onSubmit = (data) => {
           console.log('Error', error.message);
         }
         console.log(error.config);
-      });
+    });
 }
 
 function Setup({ status, setStatus }) {
@@ -44,14 +47,11 @@ function Setup({ status, setStatus }) {
         <>
             <Formik
                 initialValues={{
-                    targetTemp: 20,
+                    targetTemp: 25,
                     outputPin: 16,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={values => {
-                    // same shape as initial values
-                    onSubmit(values);
-                }}
+                onSubmit={(values) => onSubmit(values)}
             >
                 {({ errors, touched }) => (
                     <Form className="setup-container">
@@ -65,7 +65,12 @@ function Setup({ status, setStatus }) {
                             <br />
                             <ErrorMessage component="span" className="error" name="targetTemp" />
 
-                            <label htmlFor="outputPin"><h2>Output Pin</h2></label>
+                            <div className="label-with-help">
+                                <label htmlFor="outputPin">
+                                    <h2>Output Pin</h2>
+                                </label>
+                                <Help helpText={outputPinHelpText} />
+                            </div>
                             <Field
                                 id="outputPin"
                                 name="outputPin"
@@ -79,9 +84,10 @@ function Setup({ status, setStatus }) {
                             <div className="btn-wrapper">
                                 <input
                                     type="submit"
-                                    className="btn primary-btn"
+                                    className="btn primary-btn green-btn"
                                     value="Start"
-                                    //onClick={() => setStatus(true)}
+                                    onClick={() => setStatus(true)}
+                                    disabled={errors.targetTemp || errors.outputPin ? true : false}
                                 />
                             </div>
                         </div>

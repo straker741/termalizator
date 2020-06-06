@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 import subprocess
+import os
+import sys
 import json
 from time import sleep
 from datetime import datetime
@@ -34,10 +36,8 @@ def setConfig(path, data):
         print("Error: Could not set config!")
         exit()
 
-def getWorkingDirectory():
-    p = subprocess.Popen("pwd", stdout=subprocess.PIPE, universal_newlines=True, shell=True)
-    data = p.communicate()[0].strip()
-    return data
+def get_script_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))
 
 def getTargetTemp(wd):
     config = getConfig(wd + "/config.json")
@@ -124,7 +124,7 @@ class ThermoReader:
 
 if __name__ == "__main__":
     try:
-        wd = getWorkingDirectory()
+        wd = get_script_path()
         config = getConfig(wd + "/config.json")
         TR = ThermoReader(config["outputPin"])
 
@@ -158,5 +158,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("End of temperature readings!")
     except:
-        print("Generic Error")
+        print("Error OR process has been killed from outside")
 GPIO.cleanup()

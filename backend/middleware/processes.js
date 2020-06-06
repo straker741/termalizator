@@ -1,35 +1,37 @@
 const find = require("find-process");
-const { exec } = require('child_process');
+const { spawn, spawnSync } = require("child_process");
+const { BASE_PATH } = require("../settings");
 
 
 const isRunning = async (processName) => {
-    await find("name", processName).then((list) => {
-        console.log(list);
-    }).catch((err) => {
-        console.log(err.stack || err);
-    });
+    return await find("name", processName);
 };
 
 
 const startProcess = (processName) => {
-    exec(`nohup python3 $HOME/termalizator/scripts/${processName} >/dev/null 2>&1 &`, (error) => {
-        if (error) {
-            console.log(error.stack);
-            console.log('Error code: '+error.code);
-            console.log('Signal received: '+error.signal);
-        }
+    const subprocess = spawn("python3", [`${BASE_PATH}${processName}`], {
+        detached: true,
+        stdio: 'ignore'
     });
+
+    subprocess.on('error', (err) => {
+        console.error('Failed to start subprocess!');
+        console.log(err);
+    });
+
+    subprocess.unref();
 };
 
 
 const killProcess = (processName) => {
-    exec(`pkill -f ${processName}`, (error) => {
-        if (error) {
-            console.log(error.stack);
-            console.log('Error code: '+error.code);
-            console.log('Signal received: '+error.signal);
-        }
+    const subprocess = spawnSync("pkill", ["-f", `${processName}`], {
+        detached: true,
+        stdio: 'ignore'
     });
+
+    if (subprocess.error) {
+        throw Error(`Failed to kill subprocess: ${subprocess.error.name}`);
+    }
 };
 
 

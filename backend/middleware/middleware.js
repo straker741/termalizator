@@ -21,6 +21,7 @@ const toSqlDate = (date) => {
 
 const logger = (req, res, next) => {
     const datetime = new Date();
+    console.log("--------------------------------------");
     console.log(`Method:   ${req.method}`);
     console.log(`URL:      ${req.protocol}://${req.get("host")}${req.originalUrl}`);
     console.log(`Datetime: ${toSqlDate(datetime)}`);
