@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
 
 import Setup from './Setup.js';
 
 
-function Dashboard() {
-    const [status, setStatus] = useState(false);
-
+function Dashboard({ status, setStatus }) {
+    
     const handleStop = () => {
+        setStatus(false);
+        /*
         axios.get("http://localhost:5000/stop/").then((response) => {
             console.log(response);
             setStatus(false);
@@ -28,28 +30,27 @@ function Dashboard() {
             console.log('Error', error.message);
             }
             console.log(error.config);
-        });
+        });*/
     }
 
     if (!status) {
         return (
-            <Setup status={status} setStatus={setStatus} />
+            <div className="dashboard">
+                <Setup status={status} setStatus={setStatus} />
+            </div>
         );
     }
     else {
         return (
-            <>
-                <div className="btn-container">
-                    <div className="btn-wrapper">
-                        <input
-                            type="button"
-                            className="btn primary-btn red-btn"
-                            value="Stop"
-                            onClick={() => handleStop()}
-                        />
-                    </div>
-                </div>
-            </>
+            <div className="dashboard">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleStop()}
+                >
+                    STOP 
+                </Button>
+            </div>
         );
     }
 }

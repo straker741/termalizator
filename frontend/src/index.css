@@ -4,178 +4,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: whitesmoke;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+header {
+    margin-bottom: 50px;
+}
+
 .page {
-  width: 95%;
+  width: 90%;
   max-width: 1024px;
-  margin: 50px auto 0 auto;
-}
-
-.setup-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.setup {
-  margin: 0 auto 2rem auto;
+  margin: 0 auto;
   text-align: center;
-  color: #444444;
 }
 
-.setup h2 {
-  font-size: 1.5em;
-  margin-bottom: 1.25em;
+form > div {
+  margin-bottom: 1.5em;
 }
-
-.btn-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-}
-
-.btn-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  height: 5rem;
-}
-
-input.error {
-  border-color: red;
-}
-
-span.error {
-  font-size: 1em;
-  color: red;
-}
-
-.green-btn {
-  color: green;
-  border-color: green;
-}
-
-.red-btn {
-  color: red;
-  border-color: red;
-}
-
-.btn {
-  cursor: pointer;
-}
-
-.primary-btn {
-  padding: 1rem 2rem;
-  font-size: 1.5em;
-  text-transform: uppercase;
-  background-color: white;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 1rem;
-  -webkit-transition: padding 250ms 0ms ease-out;
-  transition: padding 250ms 0ms ease-out;
-}
-
-.primary-btn:disabled,
-.primary-btn:disabled:hover {
-  border-color: #aaaaaa;
-  color: #aaaaaa;
-  padding: 1rem 2rem;
-  cursor: default;
-}
-
-.primary-btn:hover {
-  padding: 1.25rem 3rem;
-  border-color: #007acc;
-  color: #007acc;
-}
-
-.setup input {
-  border: 2px solid #aaaaaa;
-  border-radius: 1rem;
-  color: #444444;
-  font-size: 1.25em;
-  padding: 1rem 0;
-  text-align: center;
-  -webkit-transition: border-color 250ms 0ms ease-out;
-  transition: border-color 250ms 0ms ease-out;
-  width: 222.917px;
-}
-
-.setup input:focus {
-  border-color: #007acc;
-}
-
-.label-with-help {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.help {
-  position: relative;
-  margin: auto 0 2.1em 1em;
-  height: 1.5em;
-  width: 1.5em;
-}
-
-.help-text {
-  display: none;
-  position: absolute;
-  top: 2.5em;
-  right: 0;
-  font-weight: bold;
-  font-size: 0.75em;
-  background-color: whitesmoke;
-  border: 2px solid #aaaaaa;
-  border-radius: 1rem;
-  padding: 0 0.75em;
-  white-space: nowrap;
-}
-
-.help-icon {
-  -webkit-transition: color 250ms 0ms ease-out;
-  transition: color 250ms 0ms ease-out;
-}
-
-.help-icon:hover {
-  color: #007acc;
-}
-
-.help svg:hover + span {
-  display: block;
-}
-
-@media (min-width: 900px) {
-  .help-text {
-    position: absolute;
-    top: 0.2em;
-    left: 100%;
-    width: 12em;
-  }
-}
-/*# sourceMappingURL=index.css.map */
