@@ -39,7 +39,7 @@ npm i -S formik axios yup
 npm i -S react-chartjs-2 chart.js
 npm i -S react-router-dom
 npm i -S @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @fortawesome/fontawesome-svg-core
-npm i -S material-table @material-ui/core @material-ui/icons
+npm i -S material-table @material-ui/core @material-ui/icons @material-ui/lab
 ```
 
 Test: not needed

@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import * as yup from 'yup';
 
 import MaterialTable from 'material-table';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import ResponseStatusSnackbar from '../ResponseStatusSnackbar.js';
+import CustomEditField from './CustomEditField.js';
 
 /* TABLE ICONS */
 import { forwardRef } from 'react';
@@ -49,32 +49,18 @@ const tableIcons = {
 };
 
 
-/* VALIDATION SCHEMA */
-const RecipeSchema = yup.object().shape({
-    id: yup.number()
-        .typeError("Enter a valid number!")
-        .positive("Enter positive number!"),
-    name: yup.string()
-        .max(32, "Too long!")
-        .required("This field is required!"),
-    weight: yup.number()
-        .typeError("Enter a valid number!")
-        .positive("Enter positive number!"),
-    temp: yup.number()
-        .typeError("Enter a valid number!")
-        .min(20, "It's a heater, not freezer!")
-        .max(100, "Do you want to burn something?")
-        .required("This field is required!"),
-    time: yup.string()
-        .required("This field is required!"),
-});
 
 
-function MyTableWrapper({ url }) {
+
+function MyTableWrapper({ url, validationSchema, title }) {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [validationError, setValidationError] = useState(true);
+    const [snackbarState, setSnackbarState] = useState({
+        status: 0,
+        message: "",
+        active: false
+    });
 
     useEffect(() => {
         axios.get(url).then(response => {
@@ -88,32 +74,56 @@ function MyTableWrapper({ url }) {
     }, [url]);
 
     const addRow = (data) => {
-        console.log(data);
-        
         axios.post(url, data).then((response) => {
             console.log(response);
+            setSnackbarState({
+                status: response.status,
+                message: "Successfully added a field!",
+                active: true
+            });
         }).catch((error) => {
             console.log(error);
+            setSnackbarState({
+                status: error.response.status,
+                message: "Error!",
+                active: true
+            });
         });
     };
 
     const updateRow = (data) => {
-        console.log(data);
-        
         axios.put(url, data).then((response) => {
             console.log(response);
+            setSnackbarState({
+                status: response.status,
+                message: "Successfully updated a field!",
+                active: true
+            });
         }).catch((error) => {
             console.log(error);
+            setSnackbarState({
+                status: error.response.status,
+                message: "Error!",
+                active: true
+            });
         });
     };
 
     const deleteRow = (id) => {
-        console.log(id);
-        
         axios.delete(`${url}/${id}`).then((response) => {
             console.log(response);
+            setSnackbarState({
+                status: response.status,
+                message: "Successfully removed a field!",
+                active: true
+            });
         }).catch((error) => {
             console.log(error);
+            setSnackbarState({
+                status: error.response.status,
+                message: "Error!",
+                active: true
+            });
         });
     };
 
@@ -126,8 +136,8 @@ function MyTableWrapper({ url }) {
     else {
         return (
             <div style={{ maxWidth: "100%" }}>
+                <ResponseStatusSnackbar {...snackbarState} setSnackbarState={setSnackbarState} />
                 <MaterialTable
-                    validationError={validationError}
                     columns={[
                         { title: "Name", field: "name" },
                         { title: "Weight", field: "weight" },
@@ -135,13 +145,11 @@ function MyTableWrapper({ url }) {
                         { title: "Time", field: "time" },
                     ]}                
                     data={data}
-                    title="My Recipe"
+                    title={title}
                     icons={tableIcons}
                     editable={{
                         onRowAdd: (newData) => {
-                            //const isValid = await RecipeSchema.isValid(newData);
-                            //console.log(isValid);
-                            new Promise((resolve, reject) => {
+                            return new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     
                                     setData([...data, newData]);
@@ -152,7 +160,7 @@ function MyTableWrapper({ url }) {
                             })
                         },
                         onRowUpdate: (newData, oldData) => {
-                            new Promise((resolve, reject) => {
+                            return new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     const dataUpdate = [...data];
                                     const index = oldData.tableData.id;
@@ -165,7 +173,7 @@ function MyTableWrapper({ url }) {
                             })
                         },
                         onRowDelete: oldData => {
-                            new Promise((resolve, reject) => {
+                            return new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     const dataDelete = [...data];
                                     const index = oldData.tableData.id;
@@ -179,28 +187,7 @@ function MyTableWrapper({ url }) {
                         }
                     }}
                     components={{
-                        EditField: props => {
-                            return (
-                                <TextField
-                                    {...props}
-                                    style={props.columnDef.type === 'numeric' ? { float: 'right' } : {}}
-                                    type={props.columnDef.type === 'numeric' ? 'number' : 'text'}
-                                    placeholder={props.columnDef.title}
-                                    value={props.value === undefined ? '' : props.value}
-                                    onChange={event => props.onChange(event.target.value)}
-                                    InputProps={{
-                                        style: {
-                                            fontSize: 13,
-                                        },
-                                        inputProps: {
-                                            'aria-label': props.columnDef.title
-                                        }
-                                    }}
-                                    //helperText="HI"
-                                    //error
-                                />
-                            );
-                        }
+                        EditField: props => <CustomEditField {...props} validationSchema={validationSchema} />
                     }}
                     onRowClick={((event, selectedRow) => setSelectedRow(selectedRow.tableData.id))}
                     options={{

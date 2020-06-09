@@ -32,6 +32,7 @@ const RecipeSchema = yup.object().shape({
         .max(100, "Do you want to burn something?")
         .required("This field is required!"),
     time: yup.string()
+        .trim()
         .required("This field is required!"),
 });
 
