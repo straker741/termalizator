@@ -4,8 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 
-// Material UI
 import { TextField, Button } from '@material-ui/core';
+
+import { HOST_URL } from '../settings.js';
 
 
 const validationSchema = yup.object().shape({
@@ -22,33 +23,26 @@ const validationSchema = yup.object().shape({
         .required("This field is required!"),
 });
 
-function Setup({ status, setStatus }) {
+
+function Setup(props) {
     const onSubmit = (data) => {
-        console.log(data);
-        setStatus(true);
-    
-        /*
-        axios.put("http://localhost:5000/config/", data).then((response) => {
+        //console.log(data);
+        axios.put(`${HOST_URL}config/`, data).then((response) => {
             console.log(response);
-        }).catch(function (error) {
-            if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
-            } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
-            }
-            console.log(error.config);
+            props.setStatus(true);
+            props.setSnackbarState({
+                status: response.status,
+                message: "Successfully started Termalizator!",
+                active: true
+            });
+        }).catch((error) => {
+            console.log(error);
+            props.setSnackbarState({
+                status: error.response.status,
+                message: "Error!",
+                active: true
+            });
         });
-        */
     }
 
     return (

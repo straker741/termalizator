@@ -12,7 +12,11 @@ function ResponseStatusSnackbar(props) {
 
     useEffect(() => {
         if (props.active) {
-            if (200 <= props.status && props.status < 300) {
+            if (100 <= props.status && props.status < 200) {
+                // Informational
+                setSeverity("info");
+            }
+            else if (200 <= props.status && props.status < 300) {
                 // Success
                 setSeverity("success");
             }
@@ -33,7 +37,7 @@ function ResponseStatusSnackbar(props) {
                 setSeverity("info");
             }
         }
-    }, [props.active]);
+    }, [props.message]);
     
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {

@@ -2,6 +2,7 @@ import React from 'react';
 
 import * as yup from 'yup';
 
+import { HOST_URL } from '../settings.js';
 import MyTable from './material-table/Material-Table.js';
 
 
@@ -29,9 +30,8 @@ const RecipeSchema = yup.object().shape({
 function Notes() {
     return (
         <>
-            {/* <MyTable url={"http://localhost:5000/api/recipes"} /> */}
             <MyTable
-                url={"http://192.168.178.24:5000/api/recipes"}
+                url={`${HOST_URL}api/recipes`}
                 validationSchema={RecipeSchema}
                 title="Recipes"
             />

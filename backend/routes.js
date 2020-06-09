@@ -21,9 +21,9 @@ router.get("/data", getData);
 
 // Pre-flight request for PUT:/config
 router.options("/config", cors());
-router.get("/config", getConfig);
+router.get("/config", cors(), getConfig);
 router.put("/config", cors(), putConfig);
-router.get("/stop", stop);
+router.get("/stop", cors(), stop);
 
 
 // Pre-flight request for:
