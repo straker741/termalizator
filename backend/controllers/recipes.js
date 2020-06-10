@@ -32,9 +32,7 @@ const getRecipe = (req, res) => {
     try {
         const data = getJsonData(BASE_PATH + "recipes.json");
 
-        const recipe = data.find(element => {
-            return element.id == req.params.id;
-        });
+        const recipe = data.find(element => element.id == req.params.id);
 
         console.log("Status:  ", 200);
         res.status(200);

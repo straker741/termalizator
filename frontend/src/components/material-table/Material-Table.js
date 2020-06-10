@@ -179,7 +179,7 @@ function MyTableWrapper({ url, validationSchema, title }) {
                                     const index = oldData.tableData.id;
                                     dataDelete.splice(index, 1);
                                     setData([...dataDelete]);
-                                    deleteRow(index);
+                                    deleteRow(oldData.id);
 
                                     resolve();
                                 }, 600);
