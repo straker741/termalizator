@@ -192,7 +192,7 @@ function MyTableWrapper({ url, validationSchema, title }) {
                     onRowClick={((event, selectedRow) => setSelectedRow(selectedRow.tableData.id))}
                     options={{
                         /* Column with action icons is the last one */
-                        actionsColumnIndex: data.length,
+                        actionsColumnIndex: 4,
                         draggable: false,
                         padding: "dense",
                         rowStyle: rowData => ({

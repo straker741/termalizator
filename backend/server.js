@@ -16,7 +16,7 @@ app.use(logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Static static folder
+// Static folder
 app.use(express.static(path.join(__dirname, "public")));
 
 // Init router
