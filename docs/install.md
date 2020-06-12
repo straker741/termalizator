@@ -14,7 +14,7 @@ sudo apt-get install -y nodejs
 ```
 
 ## Installing server:
-**go to folder termalizator/backend, and type:**
+go to folder **termalizator/backend**, and type:
 ```
 npm install
 ```
